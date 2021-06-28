@@ -32,28 +32,4 @@ object ApiModule {
         retrofit: Retrofit
     ) = retrofit
         .create(WeatherApi::class.java)
-
-
-    @Provides
-    @Singleton
-    @Named("default")
-    fun provideWeatherResponseDefault() =
-            WeatherResponse(
-                    weather = listOf(Weather("None", "", "50n")),
-                    main = Main(0.0, 0, 0, 0.0, 0.0),
-                    visibility = 0,
-                    name = "None"
-            )
-
-
-    @Provides
-    @Singleton
-    @Named("error")
-    fun provideWeatherResponseError() =
-            WeatherResponse(
-                    weather = listOf(Weather("None", "", "50n")),
-                    main = Main(0.0, 0, 0, 0.0, 0.0),
-                    visibility = 0,
-                    name = "No such city exists"
-            )
 }
