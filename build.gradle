@@ -8,6 +8,7 @@ buildscript {
         coroutines_version = '1.4.3'
         retrofit_version = '2.9.0'
         okhttp_version = '4.9.1'
+        picasso_version = '2.71828'
     }
     repositories {
         google()
