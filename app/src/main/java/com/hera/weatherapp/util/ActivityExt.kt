@@ -30,39 +30,6 @@ fun AppCompatActivity.hideKeyboard() {
 }
 
 
-fun AppCompatActivity.checkLocationEnabled() {
-    val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    var isGpsEnabled = false
-    var isNetworkEnabled = false
-
-    try {
-        isGpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    } catch (e: Exception) {
-        Log.e("TAG", "$e")
-    }
-
-    try {
-        isNetworkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    } catch (e: Exception) {
-        Log.e("TAG", "$e")
-    }
-
-    if (!isGpsEnabled && !isNetworkEnabled) {
-        AlertDialog.Builder(this)
-                .setTitle("Enable Location")
-                .setCancelable(false)
-                .setPositiveButton("Enable") { dialog, _ ->
-                    dialog.dismiss()
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                }
-                .setNegativeButton("Cancel") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .show()
-    }
-}
-
-
 fun AppCompatActivity.getLocation(locationListener: LocationListener) {
     try {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

@@ -2,11 +2,13 @@ package com.hera.weatherapp.ui
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
@@ -15,7 +17,6 @@ import com.hera.weatherapp.data.models.WeatherResponse
 import com.hera.weatherapp.databinding.ActivityWeatherBinding
 import com.hera.weatherapp.util.Collections.bgMap
 import com.hera.weatherapp.util.Collections.iconMap
-import com.hera.weatherapp.util.checkLocationEnabled
 import com.hera.weatherapp.util.getLocation
 import com.hera.weatherapp.util.hideKeyboard
 import com.squareup.picasso.Picasso
@@ -39,7 +40,6 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         val editor = sharedPrefs.edit()
         viewModel.unit = sharedPrefs.getString("unit", "KELVIN")!!
 
-        checkLocationEnabled()
         getLocation(this)
 
         binding.apply {
@@ -132,5 +132,19 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         } catch (e: IOException) {
             Log.e("TAG", "$e")
         }
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        AlertDialog.Builder(this)
+                .setTitle("Enable Location")
+                .setCancelable(false)
+                .setPositiveButton("Enable") { dialog, _ ->
+                    dialog.dismiss()
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
     }
 }
