@@ -15,10 +15,9 @@ import androidx.appcompat.widget.SearchView
 import com.hera.weatherapp.R
 import com.hera.weatherapp.data.models.WeatherResponse
 import com.hera.weatherapp.databinding.ActivityWeatherBinding
+import com.hera.weatherapp.util.*
 import com.hera.weatherapp.util.Collections.bgMap
 import com.hera.weatherapp.util.Collections.iconMap
-import com.hera.weatherapp.util.getLocation
-import com.hera.weatherapp.util.hideKeyboard
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
@@ -47,7 +46,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     viewModel.apply {
                         q = query ?: ""
-                        startLoading(binding.scrollView, binding.pbLoading)
+                        startLoading(scrollView, pbLoading, tvSearchError)
                         getCurrentWeather(q)
                     }
                     hideKeyboard()
@@ -57,7 +56,11 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 override fun onQueryTextChange(newText: String?) = false
             })
             tvTempMain.setOnClickListener {
-                viewModel.changeMeasureUnit(scrollView, pbLoading)
+                viewModel.apply {
+                    changeMeasureUnit()
+                    startLoading(scrollView, pbLoading, tvSearchError)
+                    getCurrentWeather(q)
+                }
                 editor.apply {
                     putString("unit", viewModel.unit)
                     apply()
@@ -70,14 +73,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         }
 
         viewModel.error.observe(this) {
-            AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setTitle("No such city exists")
-                    .setMessage("Try again")
-                    .setNeutralButton("Ok") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
+            showSearchError(binding.tvSearchError, binding.pbLoading)
         }
     }
 
@@ -113,7 +109,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                     tvTempMax.text = main.tempMaxF
                 }
             }
-            viewModel.stopLoading(scrollView, pbLoading)
+            stopLoading(scrollView, pbLoading, tvSearchError)
         }
     }
 
@@ -123,7 +119,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
             val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
             viewModel.apply {
-                startLoading(binding.scrollView, binding.pbLoading)
+                startLoading(binding.scrollView, binding.pbLoading, binding.tvSearchError)
                 q = addresses[0].locality
                 getCurrentWeather(q)
                 Log.d("TAG", q)
@@ -136,7 +132,8 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
 
     override fun onProviderDisabled(provider: String) {
         AlertDialog.Builder(this)
-                .setTitle("Enable Location")
+                .setTitle("Location is Disabled")
+                .setMessage("Please enable the location so we can show the weather of your current position.")
                 .setCancelable(false)
                 .setPositiveButton("Enable") { dialog, _ ->
                     dialog.dismiss()
@@ -144,6 +141,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
+                    onCancelToEnableProvider(binding.tvProviderDisabled, binding.pbLoading)
                 }
                 .show()
     }

@@ -9,7 +9,11 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import kotlinx.coroutines.CoroutineScope
@@ -53,4 +57,44 @@ fun AppCompatActivity.getLocation(locationListener: LocationListener) {
             getLocation(locationListener)
         }
     }
+}
+
+
+fun AppCompatActivity.startLoading(
+        scrollView: ScrollView,
+        progressBar: ProgressBar,
+        errorTextView: TextView
+) {
+    if (errorTextView.visibility == View.VISIBLE)
+        errorTextView.visibility = View.INVISIBLE
+    scrollView.visibility = View.INVISIBLE
+    progressBar.visibility = View.VISIBLE
+}
+
+
+fun AppCompatActivity.stopLoading(
+        scrollView: ScrollView,
+        progressBar: ProgressBar,
+        errorTextView: TextView
+) {
+    if (errorTextView.visibility == View.VISIBLE)
+        errorTextView.visibility = View.INVISIBLE
+    scrollView.visibility = View.VISIBLE
+    progressBar.visibility = View.INVISIBLE
+}
+
+
+fun AppCompatActivity.showSearchError(errorTextView: TextView, progressBar: ProgressBar) {
+    errorTextView.visibility = View.VISIBLE
+    progressBar.visibility = View.INVISIBLE
+
+}
+
+
+fun AppCompatActivity.onCancelToEnableProvider(
+        providerDisabledTextView: TextView,
+        progressBar: ProgressBar
+) {
+    providerDisabledTextView.visibility = View.VISIBLE
+    progressBar.visibility = View.INVISIBLE
 }

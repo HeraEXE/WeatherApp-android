@@ -36,26 +36,12 @@ class WeatherViewModel @Inject constructor(
     }
 
 
-    fun changeMeasureUnit(scrollView: ScrollView, progressBar: ProgressBar) {
+    fun changeMeasureUnit() {
         unit = when (unit) {
             "KELVIN" -> "CELSIUS"
             "CELSIUS" -> "FAHRENHEIT"
             "FAHRENHEIT" -> "KELVIN"
             else -> "KELVIN"
         }
-        startLoading(scrollView, progressBar)
-        getCurrentWeather(q)
-    }
-
-
-    fun startLoading(scrollView: ScrollView, progressBar: ProgressBar) {
-        scrollView.visibility = View.INVISIBLE
-        progressBar.visibility = View.VISIBLE
-    }
-
-
-    fun stopLoading(scrollView: ScrollView, progressBar: ProgressBar) {
-        scrollView.visibility = View.VISIBLE
-        progressBar.visibility = View.INVISIBLE
     }
 }
