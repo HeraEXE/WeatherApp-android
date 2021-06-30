@@ -63,38 +63,51 @@ fun AppCompatActivity.getLocation(locationListener: LocationListener) {
 fun AppCompatActivity.startLoading(
         scrollView: ScrollView,
         progressBar: ProgressBar,
-        errorTextView: TextView
+        errorTextView: TextView,
+        providerDisabledTextView: TextView,
 ) {
-    if (errorTextView.visibility == View.VISIBLE)
-        errorTextView.visibility = View.INVISIBLE
     scrollView.visibility = View.INVISIBLE
     progressBar.visibility = View.VISIBLE
+    errorTextView.visibility = View.INVISIBLE
+    providerDisabledTextView.visibility = View.INVISIBLE
 }
 
 
 fun AppCompatActivity.stopLoading(
         scrollView: ScrollView,
         progressBar: ProgressBar,
-        errorTextView: TextView
+        errorTextView: TextView,
+        providerDisabledTextView: TextView,
 ) {
-    if (errorTextView.visibility == View.VISIBLE)
-        errorTextView.visibility = View.INVISIBLE
     scrollView.visibility = View.VISIBLE
     progressBar.visibility = View.INVISIBLE
+    errorTextView.visibility = View.INVISIBLE
+    providerDisabledTextView.visibility = View.INVISIBLE
 }
 
 
-fun AppCompatActivity.showSearchError(errorTextView: TextView, progressBar: ProgressBar) {
-    errorTextView.visibility = View.VISIBLE
+fun AppCompatActivity.showSearchError(
+        scrollView: ScrollView,
+        progressBar: ProgressBar,
+        errorTextView: TextView,
+        providerDisabledTextView: TextView,
+) {
+    scrollView.visibility = View.INVISIBLE
     progressBar.visibility = View.INVISIBLE
+    errorTextView.visibility = View.VISIBLE
+    providerDisabledTextView.visibility = View.INVISIBLE
 
 }
 
 
 fun AppCompatActivity.onCancelToEnableProvider(
+        scrollView: ScrollView,
+        progressBar: ProgressBar,
+        errorTextView: TextView,
         providerDisabledTextView: TextView,
-        progressBar: ProgressBar
 ) {
-    providerDisabledTextView.visibility = View.VISIBLE
+    scrollView.visibility = View.INVISIBLE
     progressBar.visibility = View.INVISIBLE
+    errorTextView.visibility = View.INVISIBLE
+    providerDisabledTextView.visibility = View.VISIBLE
 }

@@ -46,7 +46,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     viewModel.apply {
                         q = query ?: ""
-                        startLoading(scrollView, pbLoading, tvSearchError)
+                        startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
                         getCurrentWeather(q)
                     }
                     hideKeyboard()
@@ -58,7 +58,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
             tvTempMain.setOnClickListener {
                 viewModel.apply {
                     changeMeasureUnit()
-                    startLoading(scrollView, pbLoading, tvSearchError)
+                    startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
                     getCurrentWeather(q)
                 }
                 editor.apply {
@@ -73,7 +73,9 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
         }
 
         viewModel.error.observe(this) {
-            showSearchError(binding.tvSearchError, binding.pbLoading)
+            binding.apply {
+                showSearchError(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+            }
         }
     }
 
@@ -109,7 +111,7 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                     tvTempMax.text = main.tempMaxF
                 }
             }
-            stopLoading(scrollView, pbLoading, tvSearchError)
+            stopLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
         }
     }
 
@@ -119,7 +121,9 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
             val geocoder = Geocoder(applicationContext, Locale.getDefault())
             val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
             viewModel.apply {
-                startLoading(binding.scrollView, binding.pbLoading, binding.tvSearchError)
+                binding.apply {
+                    startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+                }
                 q = addresses[0].locality
                 getCurrentWeather(q)
                 Log.d("TAG", q)
@@ -141,7 +145,9 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
-                    onCancelToEnableProvider(binding.tvProviderDisabled, binding.pbLoading)
+                    binding.apply {
+                        onCancelToEnableProvider(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+                    }
                 }
                 .show()
     }
