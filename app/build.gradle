@@ -17,8 +17,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_KEY", api_key)
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -82,4 +82,8 @@ dependencies {
 
     // Picasso
     implementation "com.squareup.picasso:picasso:$picasso_version"
+
+
+    // DataStore Preferences
+    implementation "androidx.datastore:datastore-preferences:$preferences_version"
 }

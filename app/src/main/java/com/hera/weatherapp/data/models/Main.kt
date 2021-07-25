@@ -1,25 +1,33 @@
 package com.hera.weatherapp.data.models
 
+import com.google.gson.annotations.SerializedName
 import kotlin.math.roundToInt
 
 data class Main(
-    val temp: Double,
-    val pressure: Int,
-    val humidity: Int,
-    val temp_min: Double,
-    val temp_max: Double
+        val temp: Double,
+        @SerializedName("feels_like")
+        val feelsLike: Double,
+        @SerializedName("temp_min")
+        val tempMin: Double,
+        @SerializedName("temp_max")
+        val tempMax: Double,
+        val pressure: Int,
+        val humidity: Int
 ) {
     val tempK get() = "${temp.roundToInt()} K"
-    val tempMinK get() = "${temp_min.roundToInt()} K"
-    val tempMaxK get() = "${temp_max.roundToInt()} K"
+    val tempFeelsLikeK get() = "${feelsLike.roundToInt()} K"
+    val tempMinK get() = "${tempMin.roundToInt()} K"
+    val tempMaxK get() = "${tempMax.roundToInt()} K"
 
     val tempF get() = "${convertKelvinToFahrenheit(temp).roundToInt()} °F"
-    val tempMinF get() = "${convertKelvinToFahrenheit(temp_min).roundToInt()} °F"
-    val tempMaxF get() = "${convertKelvinToFahrenheit(temp_max).roundToInt()} °F"
+    val tempFeelsLikeF get() = "${convertKelvinToFahrenheit(feelsLike).roundToInt()} °F"
+    val tempMinF get() = "${convertKelvinToFahrenheit(tempMin).roundToInt()} °F"
+    val tempMaxF get() = "${convertKelvinToFahrenheit(tempMax).roundToInt()} °F"
 
     val tempC get() = "${convertKelvinToCelsius(temp).roundToInt()} °C"
-    val tempMinC get() = "${convertKelvinToCelsius(temp_min).roundToInt()} °C"
-    val tempMaxC get() = "${convertKelvinToCelsius(temp_max).roundToInt()} °C"
+    val tempFeelsLikeC get() = "${convertKelvinToCelsius(feelsLike).roundToInt()} °C"
+    val tempMinC get() = "${convertKelvinToCelsius(tempMin).roundToInt()} °C"
+    val tempMaxC get() = "${convertKelvinToCelsius(tempMax).roundToInt()} °C"
 
     val humidityString get() = "$humidity%"
 

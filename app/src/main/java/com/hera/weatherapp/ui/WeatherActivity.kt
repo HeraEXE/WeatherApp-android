@@ -12,42 +12,68 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
-import com.hera.weatherapp.R
-import com.hera.weatherapp.data.models.WeatherResponse
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
+import com.hera.weatherapp.data.models.CurrentWeatherResponse
 import com.hera.weatherapp.databinding.ActivityWeatherBinding
 import com.hera.weatherapp.util.*
 import com.hera.weatherapp.util.Collections.bgMap
 import com.hera.weatherapp.util.Collections.iconMap
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore("settings")
 
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(), LocationListener {
 
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var binding: ActivityWeatherBinding
+    private lateinit var degreeUnitKey: Preferences.Key<String>
+    private lateinit var degreeUnitFlow: Flow<String>
+    private lateinit var speedUnitKey: Preferences.Key<String>
+    private lateinit var speedUnitFlow: Flow<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        degreeUnitKey = stringPreferencesKey("degreeUnit")
+        degreeUnitFlow = applicationContext.dataStore.data.map { preferences ->
+            preferences[degreeUnitKey] ?: "KELVIN"
+        }
+        speedUnitKey = stringPreferencesKey("speedUnit")
+        speedUnitFlow = applicationContext.dataStore.data.map { preferences ->
+            preferences[speedUnitKey] ?: "kmph"
+        }
+        lifecycleScope.launch {
+            degreeUnitFlow.collect {
+                viewModel.degreeUnit.value = it
+            }
+        }
+        lifecycleScope.launch {
+            speedUnitFlow.collect {
+                viewModel.speedUnit.value = it
+            }
+        }
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val sharedPrefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
-        viewModel.unit = sharedPrefs.getString("unit", "KELVIN")!!
-
         getLocation(this)
-
         binding.apply {
             svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     viewModel.apply {
-                        q = query ?: ""
+                        q.value = query ?: ""
                         startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
-                        getCurrentWeather(q)
                     }
                     hideKeyboard()
                     return true
@@ -57,59 +83,84 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
             })
             tvTempMain.setOnClickListener {
                 viewModel.apply {
-                    changeMeasureUnit()
+                    changeDegreeUnit()
                     startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
-                    getCurrentWeather(q)
                 }
-                editor.apply {
-                    putString("unit", viewModel.unit)
-                    apply()
+                lifecycleScope.launch {
+                    applicationContext.dataStore.edit { settings ->
+                        settings[degreeUnitKey] = viewModel.degreeUnit.value
+                    }
+                }
+            }
+            tvWindSpeed.setOnClickListener {
+                viewModel.apply {
+                    changeSpeedUnit()
+                    startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+                }
+                lifecycleScope.launch {
+                    applicationContext.dataStore.edit { settings ->
+                        settings[speedUnitKey] = viewModel.speedUnit.value
+                    }
                 }
             }
         }
-
-        viewModel.weather.observe(this) { weatherResponse ->
-            updateUI(weatherResponse)
+        lifecycleScope.launch {
+            viewModel.weather.collect { weatherResponse ->
+                updateUI(weatherResponse)
+            }
         }
-
-        viewModel.error.observe(this) {
-            binding.apply {
-                showSearchError(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+        lifecycleScope.launch {
+            viewModel.error.collect {
+                binding.apply {
+                    if (it == 1) {
+                        showSearchError(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
+                        viewModel.error.value = 0
+                    }
+                }
             }
         }
     }
 
 
-    private fun updateUI(weatherResponse: WeatherResponse) {
+    private fun updateUI(weatherResponse: CurrentWeatherResponse) {
+        val coord = weatherResponse.coord
         val weather = weatherResponse.weather[0]
         val dayNight = weather.icon[2]
         val main = weatherResponse.main
+        val wind = weatherResponse.wind
         binding.apply {
             bgMap[dayNight]?.let { constraintLayoutWeather.setBackgroundResource(it) }
-            tvCity.text = weatherResponse.name
-            tvDescription.text = weather.main
-            tvHumidityPercent.text = main.humidityString
+            tvCityName.text = weatherResponse.name
+            tvCityCoord.text = "lat: ${coord.lat}  lon: ${coord.lon}"
+            tvDescription.text = weather.description
             Picasso.get()
                     .load(iconMap[weather.icon]!!)
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.placeholder)
+                    .placeholder(iconMap[weather.icon]!!)
                     .into(ivIcon)
-            when (viewModel.unit) {
+            when (viewModel.degreeUnit.value) {
                 "KELVIN" -> {
                     tvTempMain.text = main.tempK
+                    tvTempFeelsLike.text = main.tempFeelsLikeK
                     tvTempMin.text = main.tempMinK
                     tvTempMax.text = main.tempMaxK
                 }
                 "CELSIUS" -> {
                     tvTempMain.text = main.tempC
+                    tvTempFeelsLike.text = main.tempFeelsLikeC
                     tvTempMin.text = main.tempMinC
                     tvTempMax.text = main.tempMaxC
                 }
                 "FAHRENHEIT" -> {
                     tvTempMain.text = main.tempF
+                    tvTempFeelsLike.text = main.tempFeelsLikeF
                     tvTempMin.text = main.tempMinF
                     tvTempMax.text = main.tempMaxF
                 }
+            }
+            tvHumidityPercent.text = main.humidityString
+            when(viewModel.speedUnit.value) {
+                "kmph" -> tvWindSpeed.text = wind.speedKmpH
+                "mph" -> tvWindSpeed.text = wind.speedMpH
             }
             stopLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
         }
@@ -124,10 +175,8 @@ class WeatherActivity : AppCompatActivity(), LocationListener {
                 binding.apply {
                     startLoading(scrollView, pbLoading, tvSearchError, tvProviderDisabled)
                 }
-                q = addresses[0].locality
-                getCurrentWeather(q)
-                Log.d("TAG", q)
-                Log.d("TAG", weather.value.toString())
+                q.value = addresses[0].locality
+                Log.d("TAG", q.value)
             }
         } catch (e: IOException) {
             Log.e("TAG", "$e")

@@ -9,6 +9,7 @@ buildscript {
         retrofit_version = '2.9.0'
         okhttp_version = '4.9.1'
         picasso_version = '2.71828'
+        preferences_version = '1.0.0-rc01'
     }
     repositories {
         google()

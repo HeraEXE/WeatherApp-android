@@ -9,8 +9,12 @@
         <item name="colorSecondary">@color/white</item>
         <item name="colorSecondaryVariant">@color/blue_0</item>
         <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
-        <!-- Customize your theme here. -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="ThemeOverlay.WeatherApp.AppWidgetContainer" parent="">
+        <item name="appWidgetBackgroundColor">@color/transparent</item>
     </style>
 </resources>
