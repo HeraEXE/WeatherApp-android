@@ -15,3 +15,32 @@ data class CurrentWeatherResponse(
         val name: String,
         val cod: Int
 )
+
+
+data class Coord(
+        val lon: Double,
+        val lat: Double
+)
+
+
+data class Weather(
+        val id: Long,
+        val main: String,
+        val description: String,
+        val icon: String
+)
+
+
+data class Clouds(
+        val all: Int
+)
+
+
+data class Sys(
+        val type: Int,
+        val id: Long,
+        val message: Double,
+        val country: String,
+        val sunrise: Long,
+        val sunset: Long
+)

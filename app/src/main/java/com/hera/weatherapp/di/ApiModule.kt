@@ -1,6 +1,7 @@
 package com.hera.weatherapp.di
 
-import com.hera.weatherapp.data.WeatherApi
+import com.hera.weatherapp.data.network.WeatherApi
+import com.hera.weatherapp.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +23,3 @@ object ApiModule {
             .build()
             .create(WeatherApi::class.java)
 }
-
-const val BASE_URL = "https://api.openweathermap.org/"

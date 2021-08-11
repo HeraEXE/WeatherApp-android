@@ -28,50 +28,107 @@
         app:layout_constraintTop_toBottomOf="@+id/sv_search"
         tools:visibility="gone" />
 
-
-    <TextView
-        android:id="@+id/tv_search_error"
+    <LinearLayout
+        android:id="@+id/ll_no_internet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:text="No such city exists"
-        android:visibility="invisible"
-        tools:visibility="gone"
-        android:fontFamily="@font/overpass_light"
-        app:layout_constraintTop_toBottomOf="@id/sv_search"
         android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/sv_search"
+        tools:visibility="gone">
 
-    <TextView
-        android:id="@+id/tv_provider_disabled"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/overpass_light"
+            android:text="No Internet connection"
+            android:textAlignment="center"
+            android:textColor="@color/white_transparent"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_cactus"
+            app:tint="@color/white_transparent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_not_found"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        android:text="Can't show the weather of your current position"
-        android:visibility="invisible"
-        tools:visibility="gone"
-        android:fontFamily="@font/overpass_light"
         android:layout_margin="16dp"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/sv_search"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/sv_search"
+        tools:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/overpass_light"
+            android:text="No such city exists"
+            android:textAlignment="center"
+            android:textColor="@color/white_transparent"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_crying"
+            app:tint="@color/white_transparent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_provider_disabled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sv_search"
+        tools:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/overpass_light"
+            android:text="Can't show the weather of your current position"
+            android:textAlignment="center"
+            android:textColor="@color/white_transparent"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_unicorn"
+            app:tint="@color/white_transparent" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sv_search"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -93,9 +150,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white_transparent"
                 android:textSize="20sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -134,9 +191,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ripple_selectable"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white"
                 android:textSize="50sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_icon"
                 app:layout_constraintTop_toBottomOf="@+id/tv_city_coord"
@@ -148,9 +205,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintEnd_toEndOf="@+id/tv_temp_main"
                 app:layout_constraintStart_toStartOf="@+id/iv_icon"
                 app:layout_constraintTop_toBottomOf="@+id/tv_temp_main"
@@ -162,8 +219,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="feels like: "
                 android:fontFamily="@font/overpass_light"
+                android:text="feels like: "
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -173,9 +230,9 @@
                 android:id="@+id/tv_temp_feels_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_feels_like"
                 app:layout_constraintStart_toEndOf="@+id/tv_feels_like"
                 app:layout_constraintTop_toTopOf="@+id/tv_feels_like"
@@ -198,8 +255,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:text="max: "
                 android:fontFamily="@font/overpass_light"
+                android:text="max: "
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_max"
@@ -209,9 +266,9 @@
                 android:id="@+id/tv_temp_max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_max"
                 app:layout_constraintStart_toEndOf="@+id/tv_max"
                 app:layout_constraintTop_toTopOf="@+id/tv_max"
@@ -236,8 +293,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:text="min: "
                 android:fontFamily="@font/overpass_light"
+                android:text="min: "
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_min"
@@ -247,9 +304,9 @@
                 android:id="@+id/tv_temp_min"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_min"
                 app:layout_constraintStart_toEndOf="@+id/tv_min"
                 app:layout_constraintTop_toTopOf="@+id/tv_min"
@@ -272,8 +329,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:text="humidity: "
                 android:fontFamily="@font/overpass_light"
+                android:text="humidity: "
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_humidity"
@@ -283,9 +340,9 @@
                 android:id="@+id/tv_humidity_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/overpass_light"
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_humidity"
                 app:layout_constraintStart_toEndOf="@+id/tv_humidity"
                 app:layout_constraintTop_toTopOf="@+id/tv_humidity"
@@ -309,8 +366,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
-                android:text="wind: "
                 android:fontFamily="@font/overpass_light"
+                android:text="wind: "
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
                 app:layout_constraintStart_toEndOf="@+id/iv_wind"
@@ -320,11 +377,11 @@
                 android:id="@+id/tv_wind_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_selectable"
+                android:fontFamily="@font/overpass_light"
                 android:text="6 km/h"
                 android:textColor="@color/white_transparent"
                 android:textSize="25sp"
-                android:fontFamily="@font/overpass_light"
-                android:background="@drawable/ripple_selectable"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_wind"
                 app:layout_constraintStart_toEndOf="@+id/tv_wind"
                 app:layout_constraintTop_toTopOf="@+id/tv_wind" />
